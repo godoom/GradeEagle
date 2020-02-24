@@ -3,7 +3,7 @@ import csv
 
 
 def str_column(matrix, i):
-    return [row[i] for row in matrix]
+    return [str(row[i]) for row in matrix]
 
 def int_column(matrix, i):
     return [int(row[i]) for row in matrix]
@@ -16,7 +16,7 @@ def float_column(matrix, i):
 
 
 grade_master_file = open('C:\\Users\\CSchulz\\Workspace\\HCI\\gradeMaster.csv', 'r')
-
+# Get labels for the columns
 labels = grade_master_file.readline().split(',')
 labels[15] = 'Credits'
 #print(labels)
@@ -44,34 +44,24 @@ withdraw_col = int_column(master, 12)
 enrollment_col = int_column(master, 13)
 crn_col = str_column(master, 14)
 credits_col = int_column(master, 15)
-# Data columns created
 
 
 
-
+# Get column totals
 unique_year = np.unique(year_col)
-
 wd_total = sum(withdraw_col)
 enrollment_total = sum(enrollment_col)
 instructor_total = len(np.unique(instructor_col))
 
-instructor_top_name = ''
-inst_max = 0
-unique_instructor = list(np.unique(instructor_col))
-instructor_rank = []
-for instructor in unique_instructor :
-    #print(instructor_col.count(instructor))
-    inst_count = instructor_col.count(instructor)
-    if  inst_count > inst_max and inst_count != 2218:
-        #print(instructor)
-        #print(inst_count)
-        inst_max = inst_count
-        instructor_top_name = instructor
-        inst_ins = [instructor_top_name, inst_max]
-        instructor_rank.append(inst_ins)
 
-instructor_rank.reverse()
-# TODO fix overshadowing problem
+
+# Get sorted list of instructors by class taught
+unique_instructor = list(np.unique(instructor_col))
+instructor_rank = { i : 0 for i in unique_instructor}
+for instructor in instructor_col :
+    instructor_rank[instructor] += 1
+instructor_rank_sorted = {k: v for k, v in sorted(instructor_rank.items(), key=lambda item: item[1], reverse=True)}
+
 
 
 # Grade totals
@@ -82,9 +72,6 @@ b_total = sum(b_col)
 c_total = sum(c_col)
 d_total = sum(d_col)
 f_total = sum(f_col)
-
-#grade_sum = a_total + b_total + c_total + d_total + f_total
-#print(grade_sum / master_rows)
 
 a_ratio = a_total / master_rows
 b_ratio = b_total / master_rows
@@ -98,8 +85,7 @@ c_percent = c_ratio
 d_percent = d_ratio
 f_percent = f_ratio
 
-#perc_sum = a_percent + b_percent + c_percent + d_percent + f_percent
-#print(perc_sum)
+
 
 # Withdraw totals
 wd_years_index = []
@@ -127,11 +113,7 @@ for year in unique_year :
     for i in indexes_by_year :
         year_wd_total += withdraw_col[i]
     wd_totals_by_year.append(year_wd_total)
-
-
-#print(unique_year)
-#wd_years_unique = np.unique(wd_years)
-#print(wd_years_unique)
+#
 
 gpa_avg = gpa_total / master_rows
 wd_ratio = wd_total / enrollment_total
@@ -148,7 +130,6 @@ print("Withdraws by year:")
 year_string = ''
 wd_string = ''
 for i in range(len(wd_totals_by_year)) :
-    #print("Withdraws in year " + str(unique_year[i] + " : " + str(wd_totals_by_year[i])))
     year_string = year_string + "   " + str(unique_year[i])
     if i > 7 :
         wd_string = wd_string + "      " + str(wd_totals_by_year[i])
@@ -161,9 +142,9 @@ print("\nTotal Grade %'s:       A       B       C       D       F")
 print("                   %.2f   %.2f   %.2f    %.2f    %.2f" %(a_percent, b_percent, c_percent, d_percent, f_percent))
 print("\nTotal unique instructors: " + str(instructor_total))
 print("Top instructors by classes taught:")
-print("Amateis     | 2218")
-for inst in instructor_rank :
-    print("%10s | %4d" %(inst[0], inst[1]))
 
-#print(master[0:3][0])
-#print(type(year_col))
+
+for element in list(instructor_rank_sorted.items())[:40] :
+    print("%12s | %4d" %(element[0], element[1]))
+
+
