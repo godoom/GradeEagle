@@ -113,14 +113,19 @@ for year in unique_year :
     for i in indexes_by_year :
         year_wd_total += withdraw_col[i]
     wd_totals_by_year.append(year_wd_total)
-#
 
+
+
+# Get ratios
 gpa_avg = gpa_total / master_rows
 wd_ratio = wd_total / enrollment_total
 wd_percent = wd_ratio * 100
 wd_ratio_2009 = wd_total / wd_years_enrollment_total
 wd_percent_2009 = wd_ratio_2009 * 100
 
+
+
+# Print information
 print("Total enrollment: " + f"{enrollment_total:,d}")
 print("Total withdraws: " + f"{wd_total:,d}")
 print("Total withdraw percent: " + "%.2f" % wd_percent + "%")
@@ -144,7 +149,7 @@ print("\nTotal unique instructors: " + str(instructor_total))
 print("Top instructors by classes taught:")
 
 
-for element in list(instructor_rank_sorted.items())[:40] :
+for element in list(instructor_rank_sorted.items())[:20] :
     print("%12s | %4d" %(element[0], element[1]))
 
 
