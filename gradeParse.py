@@ -1,6 +1,6 @@
 import numpy as np
 import csv
-
+import plotly.express as px
 
 def str_column(matrix, i):
     return [str(row[i]) for row in matrix]
@@ -15,7 +15,7 @@ def float_column(matrix, i):
 
 
 
-grade_master_file = open('C:\\Users\\CSchulz\\Workspace\\HCI\\gradeMaster.csv', 'r')
+grade_master_file = open('.\\data\\gradeMaster.csv', 'r')
 # Get labels for the columns
 labels = grade_master_file.readline().split(',')
 labels[15] = 'Credits'
@@ -97,9 +97,11 @@ for wd in withdraw_col :
     
 wd_years = []
 wd_years_enrollment_total = 0
+wd_years_f_total = 0
 for index in wd_years_index :
     wd_years.append(year_col[index])
     wd_years_enrollment_total += enrollment_col[index]
+    wd_years_f_total += f_col[index]
 
 wd_totals_by_year = []
 for year in unique_year :
@@ -122,7 +124,8 @@ wd_ratio = wd_total / enrollment_total
 wd_percent = wd_ratio * 100
 wd_ratio_2009 = wd_total / wd_years_enrollment_total
 wd_percent_2009 = wd_ratio_2009 * 100
-
+f_ratio_2009 = wd_years_f_total / wd_years_enrollment_total
+f_percent_2009 = f_ratio_2009 * 100
 
 
 # Print information
@@ -130,6 +133,7 @@ print("Total enrollment: " + f"{enrollment_total:,d}")
 print("Total withdraws: " + f"{wd_total:,d}")
 print("Total withdraw percent: " + "%.2f" % wd_percent + "%")
 print("Withdraw percent since 2009: " + "%.2f" % wd_percent_2009 + "%")
+print("F percent since 2009: " + "%.2f" % f_percent_2009 + "%")
 print("Total GPA Avg.: " + "%.2f" % gpa_avg)
 print("Withdraws by year:")
 year_string = ''
@@ -148,8 +152,13 @@ print("                   %.2f   %.2f   %.2f    %.2f    %.2f" %(a_percent, b_per
 print("\nTotal unique instructors: " + str(instructor_total))
 print("Top instructors by classes taught:")
 
-
+instIndex = 0
 for element in list(instructor_rank_sorted.items())[:20] :
-    print("%12s | %4d" %(element[0], element[1]))
+    instIndex += 1
+    print("%2d)%12s | %4d" %(instIndex, element[0], element[1]))
+    
+
+
+
 
 
